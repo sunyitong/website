@@ -1,4 +1,4 @@
-const cacheName = "DefaultCompany-web-0.1";
+const cacheName = "YITONG-YITONG-0.1";
 const contentToCache = [
     "Build/export.loader.js",
     "Build/export.framework.js.unityweb",
