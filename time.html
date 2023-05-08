@@ -3,7 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>倒计时</title>
+    <title>PAPER TIMER</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 35em;
+        }
+
+        .conference-title {
+            font-weight: bold;
+        }
+    </style>
     <script>
         function updateTime(deadline, timezone) {
             let now = new Date();
@@ -11,7 +36,7 @@
             let distance = deadlineDate - now;
 
             if (distance < 0) {
-                return "已截止";
+                return "Closed";
             }
 
             let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -19,28 +44,51 @@
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            return days + "天 " + hours + "小时 " + minutes + "分钟 " + seconds + "秒";
+            return '<span style="color: #FF5733;">' + days + "d</span> " +
+                '<span style="color: #C70039;">' + hours + "h</span> " +
+                '<span style="color: #900C3F;">' + minutes + "m</span> " +
+                '<span style="color: #581845;">' + seconds + "s</span>";
         }
 
         function updateCountdown() {
             let deadlines = [
-                {title: "会议A", deadline: "2023-06-01 23:59", timezone: "UTC"},
-                {title: "会议B", deadline: "2023-06-15 23:59", timezone: "AOE"}
+                {title: "IMET", deadline: "2023-05-12 23:59", timezone: "UTC", url: "http://imet.cyens.org.cy/submission/"},
+                {title: "ISMAR", deadline: "2023-06-05 23:59", timezone: "AOE", url: "https://ismar23.org/conference-submission-guidelines/"},
+                {title: "VRST", deadline: "2023-06-12 23:59", timezone: "AOE", url: "https://vrst.acm.org/vrst2023/submissions/"}
             ];
 
+            let tableBody = document.getElementById("countdownTable");
+            tableBody.innerHTML = "";
+
             for (let i = 0; i < deadlines.length; i++) {
-                let countdownElement = document.getElementById("countdown" + i);
-                countdownElement.innerHTML = deadlines[i].title + ": " + updateTime(deadlines[i].deadline, deadlines[i].timezone);
+                let row = document.createElement("tr");
+
+                let titleCell = document.createElement("td");
+                titleCell.innerHTML = '<span class="conference-title"><a href="' + deadlines[i].url + '" target="_blank">' + deadlines[i].title + '</a></span>';
+                row.appendChild(titleCell);
+
+                let countdownCell = document.createElement("td");
+                countdownCell.innerHTML = updateTime(deadlines[i].deadline, deadlines[i].timezone);
+                row.appendChild(countdownCell);
+
+                let deadlineCell = document.createElement("td");
+                deadlineCell.innerText = deadlines[i].deadline + ' ' + (deadlines[i].timezone === "AOE" ? "UTC-12" : deadlines[i].timezone);
+                row.appendChild(deadlineCell);
+
+
+                tableBody.appendChild(row);
             }
         }
 
         setInterval(updateCountdown, 1000);
-
     </script>
 </head>
 <body>
-    <h1>学术会议和期刊投稿倒计时</h1>
-    <p id="countdown0"></p>
-    <p id="countdown1"></p>
+    <h1>PAPER TIMER</h1>
+    <div class="grid-container">
+        <table>
+            <tbody id="countdownTable"></tbody>
+        </table>
+    </div>
 </body>
 </html>
