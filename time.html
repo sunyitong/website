@@ -43,19 +43,24 @@
             let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            return '<span style="color: #FF5733;">' + days + "d</span> " +
-                '<span style="color: #C70039;">' + hours + "h</span> " +
-                '<span style="color: #900C3F;">' + minutes + "m</span> " +
-                '<span style="color: #581845;">' + seconds + "s</span>";
+            
+            return '<span style="color: #FD841F;">' + days + "d</span> " +
+                '<span style="color: #E14D2A;">' + hours + "h</span> " +
+                '<span style="color: #CD104D;">' + minutes + "m</span> " +
+                '<span style="color: #9C2C77;">' + seconds + "s</span>";
         }
-
         function updateCountdown() {
             let deadlines = [
-                {title: "IMET", deadline: "2023-05-12 23:59", timezone: "UTC", url: "http://imet.cyens.org.cy/submission/"},
-                {title: "ISMAR", deadline: "2023-06-05 23:59", timezone: "AOE", url: "https://ismar23.org/conference-submission-guidelines/"},
-                {title: "VRST", deadline: "2023-06-12 23:59", timezone: "AOE", url: "https://vrst.acm.org/vrst2023/submissions/"}
+                {title: "IMET", deadline: "2023/05/12 23:59", timezone: "UTC", url: "http://imet.cyens.org.cy/submission/"},
+                {title: "ISMAR", deadline: "2023/06/05 23:59", timezone: "AOE", url: "https://ismar23.org/conference-submission-guidelines/"},
+                {title: "VRST", deadline: "2023/06/12 23:59", timezone: "AOE", url: "https://vrst.acm.org/vrst2023/submissions/"}
             ];
+
+            deadlines.sort((a, b) => {
+                let deadlineA = new Date(a.deadline + " " + (a.timezone === "AOE" ? "UTC-12" : a.timezone));
+                let deadlineB = new Date(b.deadline + " " + (b.timezone === "AOE" ? "UTC-12" : b.timezone));
+                return deadlineA - deadlineB;
+            });
 
             let tableBody = document.getElementById("countdownTable");
             tableBody.innerHTML = "";
@@ -71,14 +76,17 @@
                 countdownCell.innerHTML = updateTime(deadlines[i].deadline, deadlines[i].timezone);
                 row.appendChild(countdownCell);
 
-                let deadlineCell = document.createElement("td");
-                deadlineCell.innerText = deadlines[i].deadline + ' ' + (deadlines[i].timezone === "AOE" ? "UTC-12" : deadlines[i].timezone);
-                row.appendChild(deadlineCell);
+                const timezoneDisplay = deadlines[i].timezone === "AOE" ? "AOE" : deadlines[i].timezone;
 
+                let deadlineCell = document.createElement("td");
+                deadlineCell.innerText = deadlines[i].deadline + ' ' + timezoneDisplay;
+                row.appendChild(deadlineCell);
 
                 tableBody.appendChild(row);
             }
         }
+
+
 
         setInterval(updateCountdown, 1000);
     </script>
