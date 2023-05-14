@@ -28,6 +28,11 @@
         .conference-title {
             font-weight: bold;
         }
+
+        th {
+            text-align: left;
+            color: rgb(61, 65, 136);
+        }
     </style>
     <script>
         function updateTime(deadline, timezone) {
@@ -36,7 +41,7 @@
             let distance = deadlineDate - now;
 
             if (distance < 0) {
-                return "Closed";
+                return "<del>  Closed  </del>";
             }
 
             let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -49,11 +54,12 @@
                 '<span style="color: #CD104D;">' + minutes + "m</span> " +
                 '<span style="color: #9C2C77;">' + seconds + "s</span>";
         }
+
         function updateCountdown() {
             let deadlines = [
-                {title: "IMET", deadline: "2023/05/12 23:59", timezone: "UTC", url: "http://imet.cyens.org.cy/submission/"},
-                {title: "ISMAR", deadline: "2023/06/05 23:59", timezone: "AOE", url: "https://ismar23.org/conference-submission-guidelines/"},
-                {title: "VRST", deadline: "2023/06/12 23:59", timezone: "AOE", url: "https://vrst.acm.org/vrst2023/submissions/"}
+                {title: "IMET", deadline: "2023/05/12 23:59", notification: "2023/06/06 23:59", timezone: "UTC", url: "http://imet.cyens.org.cy/submission/"},
+                {title: "ISMAR", deadline: "2023/06/05 23:59", notification: "2023/08/09 23:59", timezone: "AOE", url: "https://ismar23.org/conference-submission-guidelines/"},
+                {title: "VRST", deadline: "2023/06/12 23:59", notification: "2023/08/07 23:59", timezone: "AOE", url: "https://vrst.acm.org/vrst2023/submissions/"}
             ];
 
             deadlines.sort((a, b) => {
@@ -82,11 +88,13 @@
                 deadlineCell.innerText = deadlines[i].deadline + ' ' + timezoneDisplay;
                 row.appendChild(deadlineCell);
 
+                let notificationCell = document.createElement("td");
+                notificationCell.innerHTML = updateTime(deadlines[i].notification, deadlines[i].timezone);
+                row.appendChild(notificationCell);
+
                 tableBody.appendChild(row);
             }
         }
-
-
 
         setInterval(updateCountdown, 1000);
     </script>
@@ -95,6 +103,14 @@
     <h1>PAPER TIMER</h1>
     <div class="grid-container">
         <table>
+            <thead>
+                <tr>
+                    <th>Conference</th>
+                    <th>Submission</th>
+                    <th>Deadline</th>
+                    <th>Notification</th>
+                </tr>
+            </thead>
             <tbody id="countdownTable"></tbody>
         </table>
     </div>
